@@ -21,7 +21,7 @@
 //   //
 //   // TODO: Add code to display the current date in the header of the page.
 // });
-var hour = {
+var hours = {
  9: document.getElementById('hour-9'),
 10: document.getElementById('hour-10'),
 11: document.getElementById('hour-11'),
@@ -34,20 +34,28 @@ var hour = {
 };
 var today = dayjs();
 var time = today.format('H')
-$('#currentDay').text(today.format('dddd, MMMM d'));
+$('#currentDay').text(today.format('dddd, MMMM D'));
 
-timeBox = document.querySelectorAll('#hour').id.slice(5);
-timeBox.forEach(function (element){
-console.log(element.id);
+Object.keys(hours).forEach(function(key){
+  var hour = hours[key];
+  var hourNumber = parseInt(key);
+  if (hourNumber < time){
+hour.classList.add("past")
+  }else if (hourNumber <= time){
+    hour.classList.add("present")
+  }else{
+    hour.classList.add("future")
+  }
+
+})
+$('button').each(function(index){
+  var button = $(this);
+  textarea = $('textarea').eq(index);
+button.on('click', function(){
+  localStorage.setItem(key,textarea.val())
+})
 })
 
-if(time == pt){
-  timeBox.classList.add('present')
-} else if ( time > pt){
-  timeBox.classList.add('past')
-}else{
-  timeBox.classList.add('future')
-}
-var test = 5;
+
 
 
