@@ -32,9 +32,16 @@ var hours = {
 16: document.getElementById('hour-16'),
 17: document.getElementById('hour-17')
 };
+
+
 var today = dayjs();
 var time = today.format('H')
 $('#currentDay').text(today.format('dddd, MMMM D'));
+ 
+  
+  var plan = JSON.parse(localStorage.getItem('plan'))
+ $('textarea').innerText = plan
+
 
 Object.keys(hours).forEach(function(key){
   var hour = hours[key];
@@ -46,15 +53,18 @@ hour.classList.add("past")
   }else{
     hour.classList.add("future")
   }
+var plan = localStorage.getItem('plan-' + key);
+if (plan){
+  $(hour).find('textarea').val(plan);
+}
+});
 
-})
-$('button').each(function(index){
-  var button = $(this);
-  textarea = $('textarea').eq(index);
-button.on('click', function(){
-  localStorage.setItem(key,textarea.val())
-})
-})
+$('button').click(function(){
+ var textarea = $(this).siblings('textarea');
+  var key = 'plan-' + textarea.parent().attr('id').split('-')[1];
+  localStorage.setItem(key,textarea.val());
+});
+
 
 
 
