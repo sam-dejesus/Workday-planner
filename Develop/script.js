@@ -1,26 +1,4 @@
-// // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// // the code isn't run until the browser has finished rendering all the elements
-// // in the html.
-// $(function () {
-//   // TODO: Add a listener for click events on the save button. This code should
-//   // use the id in the containing time-block as a key to save the user input in
-//   // local storage. HINT: What does `this` reference in the click listener
-//   // function? How can DOM traversal be used to get the "hour-x" id of the
-//   // time-block containing the button that was clicked? How might the id be
-//   // useful when saving the description in local storage?
-//   //
-//   // TODO: Add code to apply the past, present, or future class to each time
-//   // block by comparing the id to the current hour. HINTS: How can the id
-//   // attribute of each time-block be used to conditionally add or remove the
-//   // past, present, and future classes? How can Day.js be used to get the
-//   // current hour in 24-hour time?
-//   //
-//   // TODO: Add code to get any user input that was saved in localStorage and set
-//   // the values of the corresponding textarea elements. HINT: How can the id
-//   // attribute of each time-block be used to do this?
-//   //
-//   // TODO: Add code to display the current date in the header of the page.
-// });
+// the object hours grabs the timeboxes and assigns them a key pair corresponding with their number
 var hours = {
  9: document.getElementById('hour-9'),
 10: document.getElementById('hour-10'),
@@ -36,13 +14,18 @@ var hours = {
 
 var today = dayjs();
 var time = today.format('H')
+// this updates the text of the p element with the id currentDay to the current day using dayjs
 $('#currentDay').text(today.format('dddd, MMMM D'));
  
-  
+  // the var plan's value retrives the value stored in the key named plan from localstorage
+  //and it is converted from json to an object
   var plan = JSON.parse(localStorage.getItem('plan'))
+  //the textarea's content will be the value from plan
  $('textarea').innerText = plan
 
-
+// for each of the keys from the object hours a function will take place which will
+// grabs the keys from the object hours and turns it into a number value rather then a string and
+//compares the key to the time var. depending on the comparison a class will be added to the to the objects key's value
 Object.keys(hours).forEach(function(key){
   var hour = hours[key];
   var hourNumber = parseInt(key);
@@ -53,16 +36,34 @@ hour.classList.add("past")
   }else{
     hour.classList.add("future")
   }
+
 var plan = localStorage.getItem('plan-' + key);
 if (plan){
   $(hour).find('textarea').val(plan);
 }
 });
-
+//when any button is clicked the function will be called and if the value of the textarea
+//matches the value in local storage it will be deleted if not it will save what is written 
+// in the local storeage 
 $('button').click(function(){
  var textarea = $(this).siblings('textarea');
   var key = 'plan-' + textarea.parent().attr('id').split('-')[1];
-  localStorage.setItem(key,textarea.val());
+  writtenPlan = textarea.val()
+  if (localStorage.getItem(key) === writtenPlan){
+     localStorage.removeItem(key);
+     textarea.val('')
+  }else{
+    localStorage.setItem(key,textarea.val());
+    //notifys the user if something was saved to their local storage
+    var respones = $ ('<p>', {
+      text: "your items were saved to local storage",
+      css:{
+        color: 'red'
+      }
+    })
+    $('#head').html(respones);
+  }
+  
 });
 
 
